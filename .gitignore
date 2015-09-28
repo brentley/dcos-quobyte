@@ -6,3 +6,6 @@ dist/
 
 .tox/
 .coverage
+
+.project
+.pydevproject

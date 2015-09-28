@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-from dcos_helloworld import constants
+from dcos_quobyte import constants
 
 
 here = path.abspath(path.dirname(__file__))
@@ -12,22 +12,22 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='dcos-helloworld',
+    name='dcos-quobyte',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
     version=constants.version,
 
-    description='DCOS HelloWorld Command Line Interface',
+    description='DCOS Quobyte Command Line Interface',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/mesosphere/dcos-helloworld',
+    url='https://github.com/mesosphere/dcos-quobyte',
 
     # Author details
-    author='Mesosphere, Inc.',
-    author_email='support@mesosphere.io',
+    author='Quobyte GmbH',
+    author_email='support@quobyte.com',
 
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -57,7 +57,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='dcos command helloworld mesosphere',
+    keywords='dcos command quobyte mesosphere, storage, performance, scalable',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
