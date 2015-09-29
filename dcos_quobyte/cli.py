@@ -32,6 +32,33 @@ __author__ = "Silvan Kaiser"
 INFO_STRING = ("\ndcos-quobyte starts a Quobyte storage backend"
                "on your cluster:\n")
 API_STRING = "/v1/version"
+QUOBYTE_FRAMEWORK_NAME = "quobyte"
+
+
+def find_quobyte_framework():
+    dcos_client = mesos.DCOSClient()
+    active_frameworks = mesos.get_master(dcos_client).frameworks()
+    # print("Active frameworks found are: " + str(active_frameworks))
+    quobyte_fw = None
+    for framework in active_frameworks:
+        if framework['name'] == QUOBYTE_FRAMEWORK_NAME:
+            return framework['webui_url']
+    return None
+
+
+def build_url(host=None):
+    if host is None:
+        host = find_quobyte_framework()
+    if host is None:
+        raise ValueError("Unable to retrieve URL for framework, please provide"
+                         " --master=<http://a.b.c:xyz> option.")
+    else:
+        print("Located Quobyte famework web interface at " + str(host))
+
+    if host.endswith('/'):
+        host = host.rstrip('/')
+
+    return str(host) + API_STRING
 
 
 def info(args):
@@ -40,19 +67,13 @@ def info(args):
 
 
 def start(host=None, release=None):
-    if host is None:
-        raise ValueError("No framework host specified, please provide"
-                         " --host=<hosturl> option.")
-    elif release is None:
+    if release is None:
         raise ValueError("No framework release specified, please provide"
                          " --release=<a.b.c> option.")
-
-    if host.endswith('/'):
-        host = host.rstrip('/')
-
+    request_url = build_url(host)
     try:
-        r = requests.get(str(host) + API_STRING + "?" + str(release))
-        # print("start request result is " + str(r))
+        r = requests.get(request_url, data=str(release))
+        print("start request result is " + str(r))
         status_code = r.status_code
         if status_code is requests.codes.ok:
             print("Framework accepted start command.")
@@ -60,17 +81,16 @@ def start(host=None, release=None):
         else:
             print("Error! Framework returned status code: " + str(status_code))
             return status_code
-    except ConnectionError:
+    except ConnectionError as e:
         print('Unable to connect to framework at ' + str(host))
+        print(str(e))
         return 2
 
 
 def stop(host=None):
-    if host is None:
-        raise ValueError("No framework host specified, please provide"
-                         " --host=<hosturl> option.")
+    request_url = build_url(host)
     try:
-        r = requests.get(str(host) + API_STRING)
+        r = requests.get(request_url)
         status_code = r.status_code
         if status_code is requests.codes.ok:
             print("Framework accepted stop command.")
@@ -94,8 +114,6 @@ def main():
         help=False,
         version='dcos-quobyte version {}'.format(constants.version))
 
-    print(args)
-
     if args['--help'] or args['-h']:
         return print(__doc__)  # Prints the whole docstring
     elif args['info']:
@@ -103,7 +121,7 @@ def main():
     elif args['start']:
         return start(host=args['--host'], release=args['--release'])
     elif args['stop']:
-        return start(host=args['--host'])
+        return stop(host=args['--host'])
     elif args['upgrade']:
         return upgrade(host=args['--host'], release=args['--release'])
     else:
