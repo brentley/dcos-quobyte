@@ -1,15 +1,16 @@
 """DCOS Quobyte Subcommand
 
 Usage:
-    dcos-quobyte info
     dcos-quobyte start [--host=<url>] [--release=<rel>]
     dcos-quobyte stop
     dcos-quobyte upgrade
-    dcos-quobyte (-h | --help)
+    dcos-quobyte (-h | --help | --info)
 
 Options:
+    -h               Show this screen
     --help           Show this screen
     --host=<url>     URL of the Quobyte framework host (including port number)
+    --info           Prints a short description of this command
     --release=<rel>  Quobyte release number to be used
     --version        Show version
 """
@@ -29,8 +30,8 @@ __copyright__ = "Quobyte Inc. 2015"
 __license__ = "Apache License 2.0"
 __author__ = "Silvan Kaiser"
 
-INFO_STRING = ("\ndcos-quobyte starts a Quobyte storage backend"
-               "on your cluster:\n")
+INFO_STRING = ("dcos-quobyte starts a Quobyte storage backend"
+               "on your cluster")
 API_STRING = "/v1/version"
 QUOBYTE_FRAMEWORK_NAME = "quobyte"
 
@@ -39,7 +40,6 @@ def find_quobyte_framework():
     dcos_client = mesos.DCOSClient()
     active_frameworks = mesos.get_master(dcos_client).frameworks()
     # print("Active frameworks found are: " + str(active_frameworks))
-    quobyte_fw = None
     for framework in active_frameworks:
         if framework['name'] == QUOBYTE_FRAMEWORK_NAME:
             return framework['webui_url']
@@ -51,7 +51,7 @@ def build_url(host=None):
         host = find_quobyte_framework()
     if host is None:
         raise ValueError("Unable to retrieve URL for framework, please provide"
-                         " --master=<http://a.b.c:xyz> option.")
+                         " --host=<http://a.b.c:xyz> option.")
     else:
         print("Located Quobyte famework web interface at " + str(host))
 
@@ -61,7 +61,7 @@ def build_url(host=None):
     return str(host) + API_STRING
 
 
-def info(args):
+def info():
     print(INFO_STRING)
     return 0
 
@@ -115,9 +115,10 @@ def main():
         version='dcos-quobyte version {}'.format(constants.version))
 
     if args['--help'] or args['-h']:
+        info()
         return print(__doc__)  # Prints the whole docstring
-    elif args['info']:
-        return info(args)
+    elif args['--info']:
+        return info()
     elif args['start']:
         return start(host=args['--host'], release=args['--release'])
     elif args['stop']:
