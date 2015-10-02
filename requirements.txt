@@ -1,3 +1,5 @@
+dcos
+docopt
 requests
 sphinx
 tox
