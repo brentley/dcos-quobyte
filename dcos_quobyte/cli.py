@@ -4,9 +4,10 @@ Usage:
     dcos-quobyte start [--host=<url>] [--release=<rel>]
     dcos-quobyte stop
     dcos-quobyte upgrade
-    dcos-quobyte (-h | --help | --info)
+    dcos-quobyte (-h | --help | --info | --config-schema)
 
 Options:
+    --config-schema  Print the configuration schema of this subcommand
     -h               Show this screen
     --help           Show this screen
     --host=<url>     URL of the Quobyte framework host (including port number)
@@ -34,6 +35,10 @@ INFO_STRING = ("dcos-quobyte starts a Quobyte storage backend"
                "on your cluster")
 API_STRING = "/v1/version"
 QUOBYTE_FRAMEWORK_NAME = "quobyte"
+SCHEMA = '''{
+                "$schema": "http://json-schema.org/schema#",
+                "id": "http://quobyte.com/schemas/dcos-quobyte.json"
+             }'''
 
 
 def find_quobyte_framework():
@@ -108,6 +113,11 @@ def upgrade(host=None, release=None):
     return start(host, release)
 
 
+def config_schema():
+    print(SCHEMA)
+    return 0
+
+
 def main():
     args = docopt.docopt(
         __doc__,
@@ -125,6 +135,8 @@ def main():
         return stop(host=args['--host'])
     elif args['upgrade']:
         return upgrade(host=args['--host'], release=args['--release'])
+    elif args['--config-schema']:
+        return config_schema()
     else:
         print(__doc__)  # Prints usage (only)
         return 1

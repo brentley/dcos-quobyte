@@ -21,7 +21,7 @@ class dcos_quobyte_cli_test (unittest.TestCase):
     @mock.patch.object(cli, 'print')
     def test_info(self, mock_cli):
 
-        cli.info(None)
+        cli.info()
         mock_cli.assert_called_once_with(cli.INFO_STRING)
 
     @mock.patch.object(requests, 'get')
@@ -144,6 +144,11 @@ class dcos_quobyte_cli_test (unittest.TestCase):
         self.assertEquals("http://test.master.adr:1234/v1/version",
                           cli.build_url(test_url))
 
+    @mock.patch.object(cli, 'print')
+    def test_config_schema(self, mock_cli_print):
+        cli.config_schema()
+
+        mock_cli_print.assert_called_once_with(cli.SCHEMA)
 
 if __name__ == '__main__':
     unittest.main()
