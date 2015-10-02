@@ -28,6 +28,7 @@ setup(
     # Author details
     author='Quobyte GmbH',
     author_email='support@quobyte.com',
+    license='Apache License 2.0',
 
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -43,7 +44,7 @@ setup(
         'Intended Audience :: Information Technology',
 
         # Pick your license as you wish (should match "license" above)
-        'License :: OSI Approved :: Apache License 2.0',
+        'License :: OSI Approved :: Apache Software License',
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
@@ -57,7 +58,8 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='dcos command quobyte mesosphere, storage, performance, scalable',
+    keywords='dcos command, quobyte, mesosphere, storage, performance,'
+             'scalable',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
