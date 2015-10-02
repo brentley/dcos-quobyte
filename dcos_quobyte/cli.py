@@ -18,9 +18,9 @@ Options:
 
 from __future__ import print_function
 from __future__ import unicode_literals
+import logging
 
 import requests
-
 import docopt
 from dcos import mesos
 from dcos_quobyte import constants
@@ -58,7 +58,7 @@ def build_url(host=None):
         raise ValueError("Unable to retrieve URL for framework, please provide"
                          " --host=<http://a.b.c:xyz> option.")
     else:
-        print("Located Quobyte famework web interface at " + str(host))
+        logging.debug("Located Quobyte famework web interface at " + str(host))
 
     if host.endswith('/'):
         host = host.rstrip('/')
@@ -78,17 +78,18 @@ def start(host=None, release=None):
     request_url = build_url(host)
     try:
         r = requests.get(request_url, data=str(release))
-        print("start request result is " + str(r))
+        logging.info("start request result is " + str(r))
         status_code = r.status_code
         if status_code is requests.codes.ok:
-            print("Framework accepted start command.")
+            logging.info("Framework accepted start command.")
             return 0
         else:
-            print("Error! Framework returned status code: " + str(status_code))
+            logging.error("Error! Framework returned status code: " +
+                          str(status_code))
             return status_code
     except ConnectionError as e:
-        print('Unable to connect to framework at ' + str(host))
-        print(str(e))
+        logging.error('Unable to connect to framework at ' + str(host))
+        logging.error(str(e))
         return 2
 
 
@@ -98,14 +99,15 @@ def stop(host=None):
         r = requests.get(request_url)
         status_code = r.status_code
         if status_code is requests.codes.ok:
-            print("Framework accepted stop command.")
+            logging.info("Framework accepted stop command.")
             return 0
         else:
-            print("Error! Framework returned status code: " + str(status_code))
+            logging.error("Error! Framework returned status code: " +
+                          str(status_code))
             return status_code
     except ConnectionError:
-        print('Unable to connect to framework at ' + str(host) + "\n"
-              'Reason was: ' + str(ConnectionError))
+        logging.error('Unable to connect to framework at ' + str(host) + "\n"
+                      'Reason was: ' + str(ConnectionError))
         return 2
 
 
