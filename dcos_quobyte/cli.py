@@ -1,10 +1,10 @@
 """DCOS Quobyte Subcommand
 
 Usage:
-    dcos-quobyte start [--host=<url>] [--release=<rel>]
-    dcos-quobyte stop
-    dcos-quobyte upgrade
-    dcos-quobyte (-h | --help | --info | --config-schema)
+    dcos quobyte start [--host=<url>] [--release=<rel>]
+    dcos quobyte stop
+    dcos quobyte upgrade
+    dcos quobyte (-h | --help | --info | --config-schema)
 
 Options:
     --config-schema  Print the configuration schema of this subcommand
@@ -21,7 +21,7 @@ from __future__ import unicode_literals
 import logging
 
 import requests
-import docopt
+from docopt import docopt
 from dcos import mesos
 from dcos_quobyte import constants
 from requests.exceptions import ConnectionError
@@ -121,13 +121,12 @@ def config_schema():
 
 
 def main():
-    args = docopt.docopt(
+    args = docopt(
         __doc__,
         help=False,
-        version='dcos-quobyte version {}'.format(constants.version))
+        version='dcos quobyte version {}'.format(constants.version))
 
     if args['--help'] or args['-h']:
-        info()
         return print(__doc__)  # Prints the whole docstring
     elif args['--info']:
         return info()
@@ -146,4 +145,5 @@ def main():
     return 0
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     main()
