@@ -44,7 +44,7 @@ SCHEMA = '''{
 def find_quobyte_framework():
     dcos_client = mesos.DCOSClient()
     active_frameworks = mesos.get_master(dcos_client).frameworks()
-    # print("Active frameworks found are: " + str(active_frameworks))
+    logging.debug("Active frameworks found are: " + str(active_frameworks))
     for framework in active_frameworks:
         if framework['name'] == QUOBYTE_FRAMEWORK_NAME:
             return framework['webui_url']
@@ -138,11 +138,9 @@ def main():
         return upgrade(host=args['--host'], release=args['--release'])
     elif args['--config-schema']:
         return config_schema()
-    else:
-        print(__doc__)  # Prints usage (only)
-        return 1
 
-    return 0
+    print(__doc__)  # Prints usage (only)
+    return 1
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
