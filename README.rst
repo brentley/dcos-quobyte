@@ -11,7 +11,7 @@ Setup
 
 #. Change directory to the repo directory::
 
-    cd dcos-quoybyte
+    cd dcos-quobyte
 
 #. Make sure that you have virtualenv installed. If not type::
 
